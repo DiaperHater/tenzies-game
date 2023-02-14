@@ -1,17 +1,56 @@
-import { useState } from 'react'
+import React from 'react'
 import Heading from './components/Heading'
 import Matrix from './components/Matrix'
 import Button from './components/Button'
 
 function App() {
 
+  const [cellList, setCellList] = React.useState(() => {
+        
+      const arr = [];
+      for(let index = 0; index < 10; index++) {
+
+          arr.push({
+            id: index, 
+            on: false,
+            value: Math.floor(Math.random() * 10)
+          })
+      }
+
+      return arr
+  })
+
+  function roll() {
+    
+    setCellList(oldCellList => {
+      
+      const newCellList = oldCellList.map(cell => {
+
+        const random = Math.floor(Math.random() * 6)
+        return cell.on ? cell : {...cell, value: random}
+      })
+      
+      return newCellList
+    })
+  }
+
+  function toggle(cellId) {
+
+    setCellList(oldCellList => {
+      
+      oldCellList[cellId].on = !oldCellList[cellId].on
+      const newCellList = [...oldCellList]
+      return newCellList
+    })
+  }
+
   return (
     <div className="App flex items-center justify-center min-h-screen">
       <main className="w-[360px] h-[380px] max-w-full max-h-full bg-slate-900 py-8 px-5">
         <div className="w-full h-full rounded-xl p-8 bg-gray-100">
           <Heading />
-          <Matrix />
-          <Button />
+          <Matrix cellList={cellList} clickHandler={toggle}/>
+          <Button clickHandler={roll} />
         </div>
       </main>
     </div>

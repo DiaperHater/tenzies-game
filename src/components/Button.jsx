@@ -1,6 +1,7 @@
 import React from "react"
 
-export default function Button() {
+export default function Button(props) {
+
     return (
         <button 
             className="
@@ -11,6 +12,7 @@ export default function Button() {
                 mt-5 mx-auto 
                 hover:bg-indigo-700 duration-200
             "
+            onClick={props.clickHandler}
         >
             Roll
         </button>
