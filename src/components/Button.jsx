@@ -4,17 +4,18 @@ export default function Button(props) {
 
     return (
         <button 
-            className="
+            className={`
                 flex items-center justify-center 
-                w-[92px] h-[35px] 
+                mini-w-[92px] h-[35px] 
                 text-white font-semibold tracking-widest 
                 bg-indigo-500 rounded 
-                mt-5 mx-auto 
+                px-5 mt-5 mx-auto 
                 hover:bg-indigo-700 duration-200
-            "
+                ${props.extraStyleClasses}
+            `}
             onClick={props.clickHandler}
         >
-            Roll
+            {props.label}
         </button>
     )
 }

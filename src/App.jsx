@@ -2,23 +2,17 @@ import React from 'react'
 import Heading from './components/Heading'
 import Matrix from './components/Matrix'
 import Button from './components/Button'
+import Banner from './components/Banner'
 
 function App() {
 
-  const [cellList, setCellList] = React.useState(() => {
-        
-      const arr = [];
-      for(let index = 0; index < 10; index++) {
+  const [cellList, setCellList] = React.useState(() => generateCellList())
 
-          arr.push({
-            id: index, 
-            on: false,
-            value: Math.floor(Math.random() * 10)
-          })
-      }
+  const [win, setWin] = React.useState(false)
 
-      return arr
-  })
+  React.useEffect(() => {
+    setWin( cellList.every(cell => cell.on) && cellList.every(cell => cell.value == cellList[0].value) )
+  }, [cellList])
 
   function roll() {
     
@@ -44,13 +38,34 @@ function App() {
     })
   }
 
+  function generateCellList() {
+
+    const arr = [];
+      for(let index = 0; index < 10; index++) {
+
+          arr.push({
+            id: index, 
+            on: false,
+            value: Math.floor(Math.random() * 10)
+          })
+      }
+
+      return arr
+  }
+
+  function newGame() {
+
+    setCellList( generateCellList() )
+  }
+
   return (
     <div className="App flex items-center justify-center min-h-screen">
       <main className="w-[360px] h-[380px] max-w-full max-h-full bg-slate-900 py-8 px-5">
-        <div className="w-full h-full rounded-xl p-8 bg-gray-100">
+        <div className="w-full h-full rounded-xl p-8 bg-gray-100 relative">
           <Heading />
           <Matrix cellList={cellList} clickHandler={toggle}/>
-          <Button clickHandler={roll} />
+          <Button clickHandler={roll} label="Roll"/>
+          { win && <Banner callback={newGame} /> }
         </div>
       </main>
     </div>
