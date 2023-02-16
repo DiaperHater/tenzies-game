@@ -9,72 +9,72 @@ import Confetti from 'react-confetti'
 
 function App() {
 
-  const [cellList, setCellList] = React.useState(() => generateCellList())
-  const [win, setWin] = React.useState(false)
+	const [cellList, setCellList] = React.useState(() => generateCellList())
+	const [win, setWin] = React.useState(false)
 
-  React.useEffect(() => {
-    setWin( cellList.every(cell => cell.on) && cellList.every(cell => cell.value == cellList[0].value) )
-  }, [cellList])
+	React.useEffect(() => {
+		setWin(cellList.every(cell => cell.on) && cellList.every(cell => cell.value == cellList[0].value))
+	}, [cellList])
 
-  const {width, height} = useWindowSize()
+	const { width, height } = useWindowSize()
 
-  function roll() {
-    
-    setCellList(oldCellList => {
-      
-      const newCellList = oldCellList.map(cell => {
+	function roll() {
 
-        const random = Math.floor(Math.random() * 6)
-        return cell.on ? cell : {...cell, value: random}
-      })
-      
-      return newCellList
-    })
-  }
+		setCellList(oldCellList => {
 
-  function toggle(cellId) {
+			const newCellList = oldCellList.map(cell => {
 
-    setCellList(oldCellList => {
-      
-      oldCellList[cellId].on = !oldCellList[cellId].on
-      const newCellList = [...oldCellList]
-      return newCellList
-    })
-  }
+				const random = Math.floor(Math.random() * 6)
+				return cell.on ? cell : { ...cell, value: random }
+			})
 
-  function generateCellList() {
+			return newCellList
+		})
+	}
 
-    const arr = [];
-      for(let index = 0; index < 10; index++) {
+	function toggle(cellId) {
 
-          arr.push({
-            id: index, 
-            on: false,
-            value: Math.floor(Math.random() * 10)
-          })
-      }
+		setCellList(oldCellList => {
 
-      return arr
-  }
+			oldCellList[cellId].on = !oldCellList[cellId].on
+			const newCellList = [...oldCellList]
+			return newCellList
+		})
+	}
 
-  function newGame() {
+	function generateCellList() {
 
-    setCellList( generateCellList() )
-  }
+		const arr = [];
+		for (let index = 0; index < 10; index++) {
 
-  return (
-    <div className="App flex items-center justify-center min-h-screen">
-      { win && <Confetti width={width} height={height} /> }
-      <main className="w-[360px] h-[380px] max-w-full max-h-full bg-slate-900 py-8 px-5">
-        <div className="w-full h-full rounded-xl p-8 bg-gray-100 relative">
-          <Heading />
-          <Matrix cellList={cellList} clickHandler={toggle}/>
-          <Button clickHandler={roll} label="Roll"/>
-          { win && <Banner callback={newGame} /> }
-        </div>
-      </main>
-    </div>
-  )
+			arr.push({
+				id: index,
+				on: false,
+				value: Math.floor(Math.random() * 10)
+			})
+		}
+
+		return arr
+	}
+
+	function newGame() {
+
+		setCellList(generateCellList())
+	}
+
+	return (
+		<div className="App flex items-center justify-center min-h-screen">
+			{win && <Confetti width={width} height={height} />}
+			<main className="w-[360px] h-[380px] max-w-full max-h-full bg-slate-900 py-8 px-5">
+				<div className="w-full h-full rounded-xl p-8 bg-gray-100 relative">
+					<Heading />
+					<Matrix cellList={cellList} clickHandler={toggle} />
+					<Button clickHandler={roll} label="Roll" />
+					{win && <Banner callback={newGame} />}
+				</div>
+			</main>
+		</div>
+	)
 }
 
 export default App
