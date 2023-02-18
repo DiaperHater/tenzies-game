@@ -1,5 +1,6 @@
 import React from 'react'
 import Heading from './components/Heading'
+import Info from './components/Info'
 import Matrix from './components/Matrix'
 import Button from './components/Button'
 import Banner from './components/Banner'
@@ -11,6 +12,7 @@ function App() {
 
 	const [cellList, setCellList] = React.useState(() => generateCellList())
 	const [win, setWin] = React.useState(false)
+	const [rollsCount, setRollsCount] = React.useState(0)
 
 	React.useEffect(() => {
 		setWin(cellList.every(cell => cell.on) && cellList.every(cell => cell.value == cellList[0].value))
@@ -30,6 +32,8 @@ function App() {
 
 			return newCellList
 		})
+
+		setRollsCount(oldRollsCount => oldRollsCount+1)
 	}
 
 	function toggle(cellId) {
@@ -60,14 +64,16 @@ function App() {
 	function newGame() {
 
 		setCellList(generateCellList())
+		setRollsCount(0)
 	}
 
 	return (
 		<div className="App flex items-center justify-center min-h-screen">
 			{win && <Confetti width={width} height={height} />}
-			<main className="w-[360px] h-[380px] max-w-full max-h-full bg-slate-900 py-8 px-5">
+			<main className="w-[360px] max-w-full max-h-full bg-slate-900 py-8 px-5">
 				<div className="w-full h-full rounded-xl p-8 bg-gray-100 relative">
 					<Heading />
+					<Info rollsCount={rollsCount} />
 					<Matrix cellList={cellList} clickHandler={toggle} />
 					<Button clickHandler={roll} label="Roll" />
 					{win && <Banner callback={newGame} />}
