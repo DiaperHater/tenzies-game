@@ -13,10 +13,34 @@ function App() {
 	const [cellList, setCellList] = React.useState(() => generateCellList())
 	const [win, setWin] = React.useState(false)
 	const [rollsCount, setRollsCount] = React.useState(0)
+	const [record, setRecord] = React.useState('--')
+
+	React.useEffect(() => {
+
+		const storedRecord = localStorage.getItem('record')
+		setRecord(oldRecord => storedRecord ? storedRecord : oldRecord)
+	}, [])
 
 	React.useEffect(() => {
 		setWin(cellList.every(cell => cell.on) && cellList.every(cell => cell.value == cellList[0].value))
 	}, [cellList])
+
+	React.useEffect(() => {
+
+		setRecord(oldRecord => {
+			
+			if (win && (record === '--' || rollsCount < oldRecord)) {
+				
+				const newRecord = rollsCount
+				localStorage.setItem('record', newRecord)
+				
+				return newRecord 
+			} else {
+
+				return oldRecord
+			}
+		})
+	}, [win])
 
 	const { width, height } = useWindowSize()
 
@@ -54,7 +78,7 @@ function App() {
 			arr.push({
 				id: index,
 				on: false,
-				value: Math.floor(Math.random() * 10)
+				value: Math.floor(Math.random() * 6)
 			})
 		}
 
@@ -73,7 +97,7 @@ function App() {
 			<main className="w-[360px] max-w-full max-h-full bg-slate-900 py-8 px-5">
 				<div className="w-full h-full rounded-xl p-8 bg-gray-100 relative">
 					<Heading />
-					<Info rollsCount={rollsCount} />
+					<Info rollsCount={rollsCount} record={record} />
 					<Matrix cellList={cellList} clickHandler={toggle} />
 					<Button clickHandler={roll} label="Roll" />
 					{win && <Banner callback={newGame} />}
